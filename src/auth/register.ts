@@ -1,12 +1,13 @@
-import { registerInsertAUser, searchIfUserExists } from "../db.ts";
+import {getEmailWithUsername, registerInsertAUser, searchIfUserExists} from "../db.ts";
 import { Router } from "@oak/oak";
+import {generateAToken} from "../utils.ts";
 
 const registerRoutes = (router: Router) => {
     router
         .post("/api/auth/register", async (ctx) => {
-            const { username, firstName, lastName, email, password } = await ctx.request.body.json();
+            const { username, name, email, password } = await ctx.request.body.json();
 
-            if (!username || !firstName || !lastName || !email || !password) {
+            if (!username || !name || !email || !password) {
                 ctx.response.status = 400;
                 ctx.response.body = { error: "Missing required fields" };
                 return;
@@ -18,9 +19,8 @@ const registerRoutes = (router: Router) => {
                     return;
                 }
                 await registerInsertAUser({
-                    lastName: lastName,
+                    name: name,
                     email: email,
-                    firstName: firstName,
                     username: username,
                     password: password
                 });
@@ -31,7 +31,12 @@ const registerRoutes = (router: Router) => {
                 return;
             }
             ctx.response.status = 201;
-            ctx.response.body = { message: "User registered successfully" };
+            const token = await generateAToken(username, email);
+            ctx.response.headers.set(
+                "Set-Cookie",
+                `auth-token=${token}; HttpOnly; SameSite=Strict; Path=/`
+            );
+            ctx.response.body = { token: token};
         });
 };
 

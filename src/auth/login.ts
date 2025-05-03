@@ -14,7 +14,12 @@ const loginRoutes = (router: Router) => {
             }
             if (await checkUserAuth(username, password)) {
                 ctx.response.status = 200;
-                ctx.response.body = { token: await generateAToken(username, await getEmailWithUsername(username)) };
+                const token = await generateAToken(username, await getEmailWithUsername(username));
+                ctx.response.headers.set(
+                    "Set-Cookie",
+                    `auth-token=${token}; HttpOnly; SameSite=Strict; Path=/`
+                );
+                ctx.response.body = { token: token };
             } else {
                 ctx.response.status = 401;
                 ctx.response.body = { error: "Invalid username or password" };

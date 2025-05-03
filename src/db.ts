@@ -8,11 +8,11 @@ async function searchIfUserExists(username: string, email: string): Promise<bool
     `;
     return user !== undefined;
 }
-async function registerInsertAUser(data: { username: string, firstName: string, lastName: string, email: string, password: string }): Promise<void> {
+async function registerInsertAUser(data: { username: string, name: string, email: string, password: string }): Promise<void> {
     const hash = await Bun.password.hash(data.password);
     const [user] = await sql`
-        INSERT INTO users (username, first_name, last_name, email, password_hash)
-        VALUES (${data.username}, ${data.firstName}, ${data.lastName}, ${data.email}, ${hash})
+        INSERT INTO users (username, name, email, password_hash)
+        VALUES (${data.username}, ${data.name}, ${data.email}, ${hash})
         RETURNING *
     `;
 }

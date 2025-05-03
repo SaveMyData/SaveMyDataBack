@@ -12,7 +12,9 @@
   "dependencies": {
     "@elysiajs/jwt": "^1.2.0",
     "@hig/jwt": "npm:@jsr/hig__jwt",
-    "@oak/oak": "npm:@jsr/oak__oak"
+    "@oak/oak": "npm:@jsr/oak__oak",
+    "@tajpouria/cors": "npm:@jsr/tajpouria__cors",
+    "cors": "^2.8.5"
   },
   "scripts": {
     "start": "bun run --watch index.ts",
