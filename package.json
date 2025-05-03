@@ -1,0 +1,22 @@
+{
+  "name": "backend",
+  "module": "index.ts",
+  "type": "module",
+  "private": true,
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@elysiajs/jwt": "^1.2.0",
+    "@hig/jwt": "npm:@jsr/hig__jwt",
+    "@oak/oak": "npm:@jsr/oak__oak"
+  },
+  "scripts": {
+    "start": "bun run --watch index.ts",
+    "build": "bun build index.ts --outdir=dist --format=cjs",
+    "test": "bun test"
+  }
+}
