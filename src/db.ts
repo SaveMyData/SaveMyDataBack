@@ -18,13 +18,19 @@ async function registerInsertAUser(data: { username: string, name: string, email
 }
 
 async function checkUserAuth(username: string, password: string): Promise<boolean> {
-    const [user] = await sql`
-        SELECT password_hash FROM users WHERE username = ${username}
-    `;
-    if (!user) {
-        return false;
+    try {
+        const [user] = await sql`
+            SELECT password_hash
+            FROM users
+            WHERE username = ${username}
+        `;
+        if (!user) {
+            return false;
+        }
+        return await Bun.password.verify(password, user.password_hash);
+    } catch (error) {
+        throw new Error("Internal Error");
     }
-    return await Bun.password.verify(password, user.password_hash);
 }
 
 async function getEmailWithUsername(username: string): Promise<string> {

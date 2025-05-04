@@ -12,17 +12,22 @@ const loginRoutes = (router: Router) => {
                 ctx.response.body = { error: "Missing required fields" };
                 return;
             }
-            if (await checkUserAuth(username, password)) {
-                ctx.response.status = 200;
-                const token = await generateAToken(username, await getEmailWithUsername(username));
-                ctx.response.headers.set(
-                    "Set-Cookie",
-                    `auth-token=${token}; HttpOnly; SameSite=Strict; Path=/`
-                );
-                ctx.response.body = { token: token };
-            } else {
-                ctx.response.status = 401;
-                ctx.response.body = { error: "Invalid username or password" };
+            try {
+                if (await checkUserAuth(username, password)) {
+                    ctx.response.status = 200;
+                    const token = await generateAToken(username, await getEmailWithUsername(username));
+                    ctx.response.headers.set(
+                        "Set-Cookie",
+                        `auth-token=${token}; HttpOnly; SameSite=Strict; Path=/`
+                    );
+                    ctx.response.body = {token: token};
+                } else {
+                    ctx.response.status = 401;
+                    ctx.response.body = {error: "Invalid username or password"};
+                }
+            } catch (error) {
+                ctx.response.status = 500;
+                ctx.response.body = {error: "Internal Server Error"};
             }
         });
 };
