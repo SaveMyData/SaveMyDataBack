@@ -7,17 +7,9 @@ import loginRoutes from "./src/auth/login.ts";
 
 const router = new Router();
 
-const app = new Application();
+const app = new Application()
 
-app.use(
-    oakCors({
-        origin: "http://127.0.0.1:5173",
-        methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization", "Accept"],
-        credentials: true,
-        optionsSuccessStatus: 200,
-    }),
-);
+app.use(oakCors({ origin: "*" }));
 
 // Apply routes after CORS middleware
 app.use(router.routes());
